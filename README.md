@@ -11,7 +11,8 @@ This is a pet project by the Super Frenk.io Bros
 
 ### Dependencies
 
-* python 2.7, aubio, pyaudio
+* ~~python 2.7, aubio, pyaudio~~
+* See Pipfile
 
 ## Links
 
