@@ -1,3 +1,5 @@
 /venv
 output/*
 obsolete/*
+.pyc
+.DS_Store
