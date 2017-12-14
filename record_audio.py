@@ -5,7 +5,40 @@ import numpy as np
 from matplotlib import pyplot as plt
 import scipy.fftpack
 import scipy.io.wavfile as wav
+from scipy import interpolate
 import argparse
+
+def load_wav(file, rate = 44100):
+
+	"""Load wav file and store as a numpy array. Audio will be converted to specified rate if the original sampling rate differs.
+
+	Args:
+		file (str): Wav file containing audio
+		rate (int): Sampling rate of output array
+
+	Returns:
+		array_like: audio represented as a 1D numpy array
+	"""
+
+	file_rate, audio = wav.read(file)
+
+	# Convert sampling rate if necessary
+	if file_rate != rate:
+		duration = audio.shape[0] / file_rate
+	
+		file_time = np.linspace(0, duration, audio.shape[0])
+		new_time = np.linspace(0, duration, int(audio.shape[0] * rate / file_rate))
+	
+		interpolator = interpolate.interp1d(file_time, audio.T)
+		new_audio = interpolator(new_time).T
+	else:
+		new_audio = audio
+
+	# Ensure data are ints
+	new_audio = np.round(new_audio)
+
+	return(new_audio)
+
 
 def record_sample(time = 5, rate = 44100, channels = 1, chunk_size = 1024):
 
@@ -13,9 +46,9 @@ def record_sample(time = 5, rate = 44100, channels = 1, chunk_size = 1024):
 
 	Args:
 		time (int): Duration of recording (seconds) 
-		rate (int): sampling rate
-		channels (int): number of channels
-		chunk_size (int) chunk size
+		rate (int): Sampling rate
+		channels (int): Number of channels
+		chunk_size (int) Chunk size
 
 	Returns:
 		array_like: audio sample represented as a 1D numpy array
